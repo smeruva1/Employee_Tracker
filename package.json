@@ -1,0 +1,30 @@
+{
+  "name": "Employee_Tracker",
+  "version": "1.0.0",
+  "description": "A Node application to manage employee's within a department using node, inquirer, console.table and mySQL DB to store data in Database. The application allows user to view list of employees, list of roles and list of departments. The application provides command-line interface for user to update employee, role and department.",
+  "main": "app.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smeruva1/Employee_Tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/smeruva1/Employee_Tracker/issues"
+  },
+  "homepage": "https://github.com/smeruva1/Employee_Tracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "inquirer": "^7.0.4",
+    "mysql": "^2.18.1"
+  }
+}
