@@ -11,13 +11,14 @@ const connection = require('./config/connection');
 // import functions to work with database
 // const { getAllEmployees, createEmployee, updateEmployee } = require('./lib/db-employees');
 const { getAllEmployees, createEmployee, deleteEmployee, updateEmployeeRole, updateEmployeeManager,
-    getAllRoles, createRole, deleteRole, updateRoleSalary, updateRoleDepartment
+    getAllRoles, createRole, deleteRole, updateRoleSalary, updateRoleDepartment,
+    getAllDepartments, createDepartment, deleteDepartment, updateDepartment
 } = require('./lib/db-employees');
 
 // import arrays of questions for inquirer prompts
 const { startQuestions, createEmployeeQuestions, deleteEmployeeQuestions, updateEmployeeQuestions, 
-createRoleQuestions, deleteRoleQuestions, updateRoleQuestions
-
+createRoleQuestions, deleteRoleQuestions, updateRoleQuestions,
+createDepartmentQuestions, deleteDepartmentQuestions, updateDepartmentQuestions
  } = require('./lib/prompts');
 
 //const startQuestions = require('./lib/prompts');
@@ -52,6 +53,18 @@ const startApp = async () => {
         updateRol();
     } else if (userAction.EmployeeAction === 'Delete an Role') {
         deleteRol();
+    }else if (userAction.EmployeeAction === 'Review all Departments') {
+        getAllDept();
+    } else if (userAction.EmployeeAction === 'Create a new Department') {
+        postNewDept();
+    } else if (userAction.EmployeeAction === 'Update an Department') {
+        //console.log("inside upd question");
+        updateDept();
+    } else if (userAction.EmployeeAction === 'Delete an Department') {
+        deleteDept();
+    
+
+
     } else if (userAction.EmployeeAction === 'Exit') {
         // console.log("inside exit");
         connection.end();
@@ -217,6 +230,76 @@ const updateRol = async () => {
 
     return startApp();
 };
+
+
+//============================================
+// Department methods
+//============================================
+
+// function to create a new auction item, defined to be async
+const getAllDept = async () => {
+
+    //console.log("inside getallDepartments");
+    const Departments = await getAllDepartments();
+
+    // print all of the items
+    console.table(Departments);
+
+    return startApp();
+};
+
+// function to create a new Department, defined to be async
+const postNewDept = async () => {
+    // console.log("inside postNewDepartment");
+    // get answers out of inquirer prompt
+    const { name } = await inquirer.prompt(createDepartmentQuestions);
+
+    // create new Department
+    const createDepartmentRes = await createDepartment({ name });
+
+    console.log(createDepartmentRes);
+    return startApp();
+};
+
+// function to delete an Department
+const deleteDept = async () => {
+
+    // console.log("inside deleteDepartment");
+    // get all Departments so user can see what's there
+    //console.log("inside getallDepartments");
+    const Departments = await getAllDepartments();
+
+    // print all of the items
+    console.table(Departments);
+
+    // enter Department id to be deleted
+    const { id } = await inquirer.prompt(deleteDepartmentQuestions);
+
+    // console.log("This id will be deleted: ", id);
+
+    await deleteDepartment(id);
+
+    return startApp();
+};
+
+// // function to update an Department
+const updateDept = async () => {
+
+    // get all Departments so user can see what's there
+    //console.log("inside getallDepartments");
+    const Departments = await getAllDepartments();
+
+    // print all of the items
+    console.table(Departments);
+
+    // enter Department id to be deleted
+    const { id, name} = await inquirer.prompt(updateDepartmentQuestions);
+
+    const updateDepartmentRes = await updateDepartment(id, name);
+    
+    return startApp();
+};
+
 
 
 
