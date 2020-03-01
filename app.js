@@ -12,13 +12,14 @@ const connection = require('./config/connection');
 // const { getAllEmployees, createEmployee, updateEmployee } = require('./lib/db-employees');
 const { getAllEmployees, createEmployee, deleteEmployee, updateEmployeeRole, updateEmployeeManager,
     getAllRoles, createRole, deleteRole, updateRoleSalary, updateRoleDepartment,
-    getAllDepartments, createDepartment, deleteDepartment, updateDepartment
+    getAllDepartments, createDepartment, deleteDepartment, updateDepartment,
+    getEmployeesByManager, getDepartmentBudget, getAllManagers
 } = require('./lib/db-employees');
 
 // import arrays of questions for inquirer prompts
 const { startQuestions, createEmployeeQuestions, deleteEmployeeQuestions, updateEmployeeQuestions, 
 createRoleQuestions, deleteRoleQuestions, updateRoleQuestions,
-createDepartmentQuestions, deleteDepartmentQuestions, updateDepartmentQuestions
+createDepartmentQuestions, deleteDepartmentQuestions, updateDepartmentQuestions, selectManagerQuestion
  } = require('./lib/prompts');
 
 //const startQuestions = require('./lib/prompts');
@@ -30,10 +31,13 @@ const startApp = async () => {
     //console.log(userAction.EmployeeAction);
 
     // depending on the answer, do an action
-    // choices: [{ name: 'Review all Employees' }, { name: 'Create a new Employee' }, { name: 'Update an Employee' }, { name: 'Delete an Employee' },
-    // { name: 'Review all Roles' }, { name: 'Create a new Role' }, { name: 'Update an Role' }, { name: 'Delete an Role' },
-    // { name: 'Exit' }]
-  
+//     choices: [{ name: 'Review all Employees' }, { name: 'Create a new Employee' }, { name: 'Update an Employee' }, { name: 'Delete an Employee' },
+//     { name: 'View Employees By Manager' }, { name: 'Review Departments Budget' },
+//     { name: 'Review all Roles' }, { name: 'Create a new Role' }, { name: 'Update an Role' }, { name: 'Delete an Role' },
+//     { name: 'Review all Departments' }, { name: 'Create a new Department' }, { name: 'Update an Department' }, { name: 'Delete an Department' }
+//     { name: 'Exit' }]
+//   }
+// ];
     if (userAction.EmployeeAction === 'Review all Employees') {
 
         getAllEmps();
@@ -44,6 +48,11 @@ const startApp = async () => {
         updateEmp();
     } else if (userAction.EmployeeAction === 'Delete an Employee') {
         deleteEmp();
+    } else if (userAction.EmployeeAction === 'View Employees By Manager') {
+        //console.log("inside upd question");
+        getEmpByMgr();
+    } else if (userAction.EmployeeAction === 'Review Departments Budget') {
+       getDeptBudget();
     }else if (userAction.EmployeeAction === 'Review all Roles') {
         getAllRol();
     } else if (userAction.EmployeeAction === 'Create a new Role') {
@@ -302,6 +311,38 @@ const updateDept = async () => {
 
 
 
+const getEmpByMgr = async () => {
+
+
+    const Mgrs = await getAllManagers();
+
+    // print all Managers
+    console.table(Mgrs);
+
+    // enter Manager to see employees
+    const { id } = await inquirer.prompt(selectManagerQuestion);
+
+    // console.log("This id will be deleted: ", id);
+
+    const employees = await getEmployeesByManager(id);
+
+    // print all of the items
+    console.table(employees);
+
+    return startApp();
+};
+
+const getDeptBudget = async () => {
+
+    const budget = await getDepartmentBudget();
+
+    console.log("Department's budget is: ",);
+    budget.forEach(element => console.log(element.name, " ", element.Budget));
+    
+    return startApp();
+};
+    
+         
 
 // connect to the db and start up auction
 connection.connect(err => {
